@@ -12,8 +12,9 @@ This repository contains **two sets** of presentation materials for explaining t
 - **[executive-slide-01-current-infrastructure.md](./executive-slide-01-current-infrastructure.md)** - Infrastructure inventory (ACM, OpenShift, GPUs)
 - **[executive-slide-02-llama-stack-components.md](./executive-slide-02-llama-stack-components.md)** - Llama Stack explained (Inference, Vector DB, Agents)
 - **[executive-slide-03-what-is-an-agent.md](./executive-slide-03-what-is-an-agent.md)** - AI agents deep dive with business value
+- **[executive-slide-04-x2ansible-workflow.md](./executive-slide-04-x2ansible-workflow.md)** - Complete user workflow from upload to Git repository
 
-**Duration:** ~40 minutes + Q&A | **Focus:** Business value, ROI, capabilities
+**Duration:** ~50-55 minutes + Q&A | **Focus:** Business value, ROI, practical workflow
 
 ---
 
@@ -33,8 +34,8 @@ This repository contains **two sets** of presentation materials for explaining t
 
 ### For Executive Presentations
 1. Start with **[EXECUTIVE-INDEX.md](./EXECUTIVE-INDEX.md)**
-2. Review executive slides 1 → 2 → 3
-3. Focus on business value and ROI
+2. Review executive slides 1 → 2 → 3 → 4
+3. Focus on business value, ROI, and practical workflow
 
 ### For Technical Presentations
 1. Start with **[INDEX.md](./INDEX.md)**
@@ -47,8 +48,8 @@ This repository contains **two sets** of presentation materials for explaining t
 
 | Audience | Presentation | Duration | Focus |
 |----------|--------------|----------|-------|
-| **Senior Management**<br/>VPs, Directors, Business Leaders | 👔 Executive (3 slides) | 40 min + Q&A | ROI, capabilities, business value |
-| **Technical Teams**<br/>Engineers, Architects, DevOps | 🔧 Technical (4 slides) | 55 min + Q&A | Architecture, implementation, workflows |
+| **Senior Management**<br/>VPs, Directors, Business Leaders | 👔 Executive (4 slides) | 50-55 min + Q&A | ROI, capabilities, workflow, business value |
+| **Technical Teams**<br/>Engineers, Architects, DevOps | 🔧 Technical (4 slides) | 55 min + Q&A | Architecture, implementation, deep technical |
 
 ## 💡 Key Features
 
@@ -79,7 +80,7 @@ This repository contains **two sets** of presentation materials for explaining t
 
 | Deck | Core Content | With Q&A | Express Version |
 |------|--------------|----------|-----------------|
-| **👔 Executive** | 35-40 min (3 slides) | 50-55 min | 15-20 min (key points only) |
+| **👔 Executive** | 50-55 min (4 slides) | 65-70 min | 20 min (key points only) |
 | **🔧 Technical** | 55 min (4 slides) | 70 min | 25 min (Slides 1 & 4 only) |
 
 ## 🛠️ Viewing Options

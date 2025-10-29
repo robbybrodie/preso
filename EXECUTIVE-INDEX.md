@@ -15,13 +15,15 @@ This is a **management-focused** presentation that explains the x2Ansible soluti
 graph LR
     S1[Slide 1:<br/>Current<br/>Infrastructure] --> S2[Slide 2:<br/>Llama Stack<br/>Components]
     S2 --> S3[Slide 3:<br/>What is an<br/>AI Agent?]
+    S3 --> S4[Slide 4:<br/>x2Ansible<br/>Workflow]
     
     style S1 fill:#0066cc,color:#fff
     style S2 fill:#cc0000,color:#fff
     style S3 fill:#92d400,color:#000
+    style S4 fill:#76b900,color:#000
 ```
 
-**Total Duration:** ~35-40 minutes + 10-15 minutes Q&A
+**Total Duration:** ~50-55 minutes + 10-15 minutes Q&A
 
 ---
 
@@ -137,7 +139,7 @@ graph LR
 
 ```mermaid
 gantt
-    title 45-Minute Presentation Flow
+    title 60-Minute Presentation Flow
     dateFormat mm
     axisFormat %M min
     
@@ -145,13 +147,15 @@ gantt
     Slide 1 Infrastructure    :s1, 00, 12m
     Slide 2 Llama Stack       :s2, 12, 12m
     Slide 3 AI Agents         :s3, 24, 15m
+    Slide 4 x2Ansible Flow    :s4, 39, 11m
     
     section Interaction
-    Q&A Throughout            :qa, 00, 39m
-    Final Q&A                 :fqa, 39, 6m
+    Q&A Throughout            :qa, 00, 50m
+    Final Q&A                 :fqa, 50, 10m
 ```
 
 **Don't rush Slide 3** - this is where the "aha" moment happens.
+**Slide 4 brings it home** - shows the practical application.
 
 ---
 
@@ -173,6 +177,11 @@ gantt
 1. Plan (figure out approach)
 2. Act (use tools)
 3. Learn (improve over time)
+
+**x2Ansible Workflow (Slide 4):**
+1. Upload → Analyze → Convert
+2. Validate → Review → Export
+3. Result: Production-ready in Git
 
 ### The Value Proposition
 
@@ -206,21 +215,25 @@ If you only have 15-20 minutes, use this approach:
 
 ### Fast Track Version
 
-**5 minutes - Slide 1:**
+**4 minutes - Slide 1:**
 - "You have OpenShift AI 3 with Llama Stack and NVIDIA GPUs"
 - Show the infrastructure diagram only
 - "This is enterprise AI, on-premises, ready to use"
 
-**5 minutes - Slide 2:**
+**4 minutes - Slide 2:**
 - "Llama Stack has 3 parts: Inference, Vector DB, Agents"
 - Show the component table only
 - "Together they enable intelligent automation"
 
-**8 minutes - Slide 3:**
+**6 minutes - Slide 3:**
 - "AI Agents can plan, act, and learn autonomously"
 - Show the sequence diagram
 - Show the 80/20 vs 95/5 comparison
-- "Chef→Ansible migration: 2-3 hours instead of 2-3 days"
+
+**4 minutes - Slide 4:**
+- "x2Ansible has 6-step workflow: Upload → Analyze → Convert → Validate → Review → Export"
+- Show the complete sequence diagram
+- Show time comparison: 2-3 hours instead of 2-3 days
 
 **2 minutes - Close:**
 - "You have the infrastructure, we have the use case"
@@ -233,11 +246,11 @@ If you only have 15-20 minutes, use this approach:
 
 ### Opening (30 seconds)
 
-> "Today I'm going to show you three things: First, the AI infrastructure you've already invested in and how powerful it is. Second, what Llama Stack provides and why it matters. Third, what AI agents are and how they'll transform automation work. By the end, you'll understand how we can use this technology to solve real business problems, starting with Chef to Ansible migration."
+> "Today I'm going to show you four things: First, the AI infrastructure you've already invested in and how powerful it is. Second, what Llama Stack provides and why it matters. Third, what AI agents are and how they work. Fourth, how x2Ansible puts this all together into a simple workflow that delivers 12x productivity improvement. By the end, you'll understand the complete solution from infrastructure to delivered value."
 
 ### Closing (1 minute)
 
-> "Let me summarize: You have enterprise-grade AI infrastructure with OpenShift AI 3 and NVIDIA GPUs. Llama Stack provides three critical capabilities - inference, knowledge, and agents. AI agents can automate 95% of work that previously required expensive experts. The x2Ansible migration project is our opportunity to put this infrastructure to work and demonstrate ROI. We're estimating 10x productivity improvement and payback within the first quarter."
+> "Let me summarize: You have enterprise-grade AI infrastructure with OpenShift AI 3 and NVIDIA GPUs. Llama Stack provides three critical capabilities - inference, knowledge, and agents. AI agents can automate 95% of work that previously required expensive experts. x2Ansible provides a 6-step guided workflow that takes engineers from Chef cookbook to production-ready Ansible in 2-3 hours, complete with documentation in a standardized Git repository. We're estimating 12x productivity improvement and payback within the first quarter."
 
 ---
 
@@ -286,6 +299,38 @@ A: "Start with high-value, well-defined use cases like Chef migration. Build exp
 
 **Q: "How does this compare to GitHub Copilot / ChatGPT Enterprise?"**
 A: "Those are general-purpose tools for individual developers. This is custom AI applications for your specific workflows, using your data, on your infrastructure. Complementary, not competitive."
+
+---
+
+### [Slide 4: x2Ansible Workflow](./executive-slide-04-x2ansible-workflow.md)
+**Duration:** ~10-12 minutes
+
+**Key Messages:**
+- Simple 6-step tab-based workflow
+- Complete automation from upload to Git repository
+- AI guidance at every step
+- Standardized output with documentation
+- 12x faster than manual process (2 hours vs 24 hours)
+
+**Talking Points:**
+- "The UI guides engineers through 6 simple tabs"
+- "Each step has clear inputs and outputs"
+- "AI agent provides real-time progress and explanations"
+- "Final output is a standardized Git repository with complete documentation"
+- "From cookbook upload to production-ready Ansible in 2-3 hours"
+
+**Visual Focus:**
+- The complete sequence diagram showing all 6 steps
+- Tab-by-tab breakdown with screenshots descriptions
+- Time comparison chart (Manual 24h vs x2Ansible 2h)
+- Standardized Git repository structure
+- Auto-generated documentation examples
+
+**Questions to Expect:**
+- *"Do engineers need special training?"* → No, guided workflow, AI provides expertise
+- *"What if something goes wrong?"* → Validation at each step, human review before Git push
+- *"Can we customize the output format?"* → Yes, configurable templates and standards
+- *"How do we know the conversion is correct?"* → ansible-lint validation, side-by-side review, AI explanations
 
 ---
 
