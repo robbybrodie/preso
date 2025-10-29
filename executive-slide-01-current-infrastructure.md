@@ -1,19 +1,19 @@
-# Executive Slide 1: Your Current AI Infrastructure
-## What You Already Have in Place
+# Executive Slide 1: AI Infrastructure Foundation
+## High-Level Platform Requirements
 
 ---
 
-## 🏢 Your Investment: Enterprise AI Platform
+## 🏢 Enterprise AI Platform Components
 
-You have already deployed a complete, enterprise-grade AI infrastructure. Here's what's in your environment:
+This solution requires an enterprise-grade AI infrastructure. Here are the platform components needed:
 
 ---
 
-## 📊 Current Infrastructure Inventory
+## 📊 Infrastructure Components Overview
 
 ```mermaid
 graph TB
-    subgraph Platform[Your OpenShift Environment]
+    subgraph Platform[Required OpenShift Environment]
         subgraph Management[Advanced Cluster Management - ACM]
             ACM1[Multi-Cluster Management]
             ACM2[Policy Enforcement]
@@ -54,21 +54,21 @@ graph TB
 
 | Component | What It Is | What It Provides | Business Value |
 |-----------|------------|------------------|----------------|
-| **Advanced Cluster Management (ACM)** | Multi-cluster orchestration | • Manage multiple OpenShift clusters<br/>• Enforce security policies<br/>• Deploy applications consistently | **Centralized control** across your infrastructure |
+| **Advanced Cluster Management (ACM)** | Multi-cluster orchestration | • Manage multiple OpenShift clusters<br/>• Enforce security policies<br/>• Deploy applications consistently | **Centralized control** across infrastructure |
 | **OpenShift Container Platform** | Enterprise Kubernetes | • Container orchestration<br/>• Application hosting<br/>• Developer platform | **Reliable foundation** for all workloads |
-| **OpenShift AI 3** | AI/ML platform | • **Llama Stack** framework<br/>• Model deployment<br/>• GPU management | **AI capabilities** on your infrastructure |
+| **OpenShift AI 3** | AI/ML platform | • **Llama Stack** framework<br/>• Model deployment<br/>• GPU management | **AI capabilities** on infrastructure |
 | **NVIDIA L40s** | Mid-range GPUs | • 48GB memory per GPU<br/>• Efficient inference<br/>• Cost-optimized | **Production AI** at scale |
 | **NVIDIA A100s** | High-end GPUs | • 80GB memory per GPU<br/>• Maximum performance<br/>• Training + inference | **Premium AI** for demanding workloads |
 
 ---
 
-## 💰 What This Represents
+## 💰 What This Platform Provides
 
-### Current Capabilities
+### Platform Capabilities
 
 ```mermaid
 graph LR
-    A[Your Infrastructure] --> B[Run AI Models]
+    A[This Infrastructure] --> B[Run AI Models]
     A --> C[Manage Multiple Clusters]
     A --> D[Enforce Security]
     A --> E[Deploy Applications]
@@ -83,14 +83,14 @@ graph LR
     style H fill:#92d400,color:#000
 ```
 
-**You Can:**
-- ✅ Run large language models (LLMs) on your own hardware
+**Platform Enables:**
+- ✅ Run large language models (LLMs) on dedicated hardware
 - ✅ Process sensitive data without external cloud dependencies
 - ✅ Scale AI workloads across multiple GPUs
 - ✅ Manage everything from a single control plane
 - ✅ Enforce consistent policies across all clusters
 
-**You Don't Need:**
+**Not Required:**
 - ❌ External AI APIs (like OpenAI, Anthropic)
 - ❌ Public cloud GPU instances
 - ❌ Multiple vendor tools
@@ -173,21 +173,21 @@ graph TB
 
 ---
 
-## 📈 Scale & Capacity
+## 📈 Scale & Capacity Considerations
 
-### Current GPU Capacity Example
+### Example GPU Deployment
 
 ```mermaid
 graph LR
-    subgraph Cluster[Your OpenShift Cluster]
+    subgraph Cluster[OpenShift Cluster Configuration]
         N1[GPU Node 1<br/>4x L40s<br/>192GB total]
         N2[GPU Node 2<br/>4x L40s<br/>192GB total]
         N3[GPU Node 3<br/>2x A100s<br/>160GB total]
     end
     
-    subgraph Workloads[Running Workloads]
+    subgraph Workloads[Potential Workloads]
         W1[x2Ansible Service<br/>1x L40s]
-        W2[Chatbot Application<br/>2x L40s]
+        W2[Other AI Application<br/>2x L40s]
         W3[Large Model Serving<br/>1x A100]
         W4[Available Capacity<br/>5x L40s + 1x A100]
     end
@@ -201,7 +201,7 @@ graph LR
     style Workloads fill:#92d400,color:#000
 ```
 
-**Scalability:**
+**Scalability Characteristics:**
 - Can run **multiple AI applications** simultaneously
 - **Isolated workloads** - one application doesn't affect others
 - **Dynamic allocation** - GPUs assigned as needed
@@ -406,29 +406,29 @@ graph LR
 | **Secure** | Enterprise-grade security and compliance |
 | **Supported** | Red Hat enterprise support included |
 
-### Investment Status
+### Capacity Planning
 
 ```mermaid
-pie title GPU Utilization Potential
-    "x2Ansible (Planned)" : 10
-    "Other AI Projects" : 20
+pie title Example GPU Utilization
+    "x2Ansible" : 10
+    "Other AI Applications" : 20
     "Available Capacity" : 70
 ```
 
-**You have significant headroom** to deploy additional AI-powered applications on this infrastructure.
+**Platform provides headroom** to deploy multiple AI-powered applications concurrently.
 
 ---
 
-## 🎯 Key Takeaway
+## 🎯 Infrastructure Summary
 
-> **You've already made the infrastructure investment. Now it's about putting it to work.**
+> **This platform provides the foundation for enterprise AI applications.**
 
-**Your platform provides:**
+**Platform delivers:**
 - ✅ Enterprise AI runtime (OpenShift AI 3 with Llama Stack)
 - ✅ High-performance compute (NVIDIA GPUs)
 - ✅ Centralized management (ACM)
 - ✅ Security and compliance
-- ✅ Room to grow
+- ✅ Scalability for growth
 
 **Next:** Understanding what Llama Stack provides and how AI agents work
 
