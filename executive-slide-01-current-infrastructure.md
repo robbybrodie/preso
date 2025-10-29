@@ -225,7 +225,8 @@ graph TB
         end
         
         subgraph Storage[Storage Infrastructure]
-            S1[Shared Storage:<br/>━━━━━━━━━━━━━━━━<br/>• Capacity: 2-5 TB usable<br/>• Type: NFS/Ceph/NetApp<br/>• IOPS: 10,000+ recommended<br/>• Redundancy: RAID 6 or replicated]
+            S1[Shared Storage:<br/>━━━━━━━━━━━━━━━━<br/>• Capacity: 2-5 TB usable<br/>• Type: NFS/Ceph/NetApp/Dell<br/>• CSI Driver: Required<br/>• IOPS: 10,000+ recommended<br/>• Redundancy: RAID 6 or replicated]
+            S2[Object Storage (Optional):<br/>━━━━━━━━━━━━━━━━<br/>• S3-compatible storage<br/>• For model artifacts & backups<br/>• MinIO/Ceph RGW/Dell ECS]
         end
     end
     
@@ -247,7 +248,8 @@ graph TB
 | **Compute Nodes** | 3 nodes | 5-6 nodes | UI, API, supporting services |
 | **CPUs per Compute Node** | 16 cores | 32 cores | Application workloads |
 | **RAM per Compute Node** | 128 GB | 256 GB | Agent services, APIs |
-| **Shared Storage** | 2 TB | 5 TB | Models, data, persistent volumes |
+| **Shared Storage (Block/File)** | 2 TB | 5 TB | Models, data, persistent volumes (requires CSI driver) |
+| **Object Storage (S3)** | Optional | 1-2 TB | Model artifacts, backups, dataset storage |
 | **Network Bandwidth** | 10 Gbps | 25-100 Gbps | GPU-to-GPU, storage access |
 
 ---
@@ -266,16 +268,63 @@ pie title Storage Allocation (Total: ~2.5 TB Recommended)
 
 **Detailed Storage Requirements:**
 
-| Storage Area | Size | Growth Rate | Purpose |
-|-------------|------|-------------|---------|
-| **AI Model Weights** | 500-800 GB | Low | LLM models (Llama 3 70B: ~140GB, 8B: ~16GB, embeddings, etc.) |
-| **Vector Database** | 100-300 GB | Medium | Knowledge base embeddings, increases with migrations |
-| **Persistent Volumes** | 200-500 GB | High | Chef cookbooks, Ansible playbooks, conversion artifacts |
-| **Application Storage** | 100-200 GB | Medium | x2a-ui/api containers, logs, temp files |
-| **OpenShift Infrastructure** | 300-500 GB | Low | Registry, etcd, system services |
-| **Backup/Snapshots** | 500 GB | Medium | Model backups, DB snapshots |
-| **Total Recommended** | **2-3 TB** | - | Production deployment |
-| **Total with Growth** | **5 TB** | - | 2-year projection |
+| Storage Area | Size | Growth Rate | Storage Type | Purpose |
+|-------------|------|-------------|--------------|---------|
+| **AI Model Weights** | 500-800 GB | Low | Block/File (PVC) | LLM models (Llama 3 70B: ~140GB, 8B: ~16GB, embeddings, etc.) |
+| **Vector Database** | 100-300 GB | Medium | Block (PVC) | Knowledge base embeddings, increases with migrations |
+| **Persistent Volumes** | 200-500 GB | High | File (RWX) | Chef cookbooks, Ansible playbooks, conversion artifacts |
+| **Application Storage** | 100-200 GB | Medium | Block (PVC) | x2a-ui/api containers, logs, temp files |
+| **OpenShift Infrastructure** | 300-500 GB | Low | Block (PVC) | Registry, etcd, system services |
+| **Backup/Snapshots** | 500 GB | Medium | S3 (Optional) | Model backups, DB snapshots |
+| **Model Artifacts** | 200-500 GB | Low | S3 (Optional) | Training checkpoints, versioned models |
+| **Total Block/File Storage** | **2-3 TB** | - | **NFS/Ceph/NetApp/Dell + CSI** | Production deployment |
+| **Total with Growth** | **5 TB** | - | **Block/File Storage** | 2-year projection |
+| **Total Object Storage (S3)** | **1-2 TB** | - | **Optional but Recommended** | Backups & artifacts |
+
+---
+
+### Storage Architecture Requirements
+
+**Container Storage Interface (CSI) Driver:**
+
+| Storage Vendor | CSI Driver | Access Modes | Notes |
+|----------------|------------|--------------|-------|
+| **Dell PowerStore** | csi-powerstore | RWO, RWX, ROX | Recommended for block & file |
+| **Dell PowerFlex** | csi-vxflexos | RWO, RWX | High-performance block storage |
+| **NetApp ONTAP** | trident | RWO, RWX, ROX | Mature, full-featured |
+| **Pure Storage** | pure-csi | RWO, RWX | High performance |
+| **Ceph (Rook)** | rook-ceph | RWO, RWX, ROX | Open-source, self-managed |
+| **NFS** | nfs-subdir-external | RWX | Simple, lower performance |
+
+**Why CSI Driver Matters:**
+- Dynamic volume provisioning for pods
+- Snapshot and clone capabilities
+- Volume expansion without downtime
+- OpenShift native integration
+
+**S3 Object Storage Requirements:**
+
+| Use Case | Storage Type | Why S3? |
+|----------|--------------|---------|
+| **Model Backups** | S3-compatible | Cost-effective long-term storage |
+| **Training Checkpoints** | S3-compatible | Large files, infrequent access |
+| **Dataset Storage** | S3-compatible | Shared access across clusters |
+| **Artifact Repository** | S3-compatible | Version control for models |
+
+**S3-Compatible Options:**
+
+| Solution | Type | Best For |
+|----------|------|----------|
+| **Dell ECS** | On-premises appliance | Enterprise, multi-protocol |
+| **Ceph RGW** | Open-source | Self-managed, cost-effective |
+| **MinIO** | Kubernetes-native | Cloud-native, lightweight |
+| **NetApp StorageGRID** | On-premises appliance | Large scale, S3 + NFS |
+| **AWS S3** | Public cloud | Hybrid deployments |
+
+**Recommended Configuration:**
+- **Primary Storage:** Dell PowerStore/PowerFlex with CSI driver (2-5TB)
+- **Object Storage:** Dell ECS or Ceph RGW (1-2TB) for backups and artifacts
+- **Access Modes:** RWO (block) for databases, RWX (file) for shared model storage
 
 ---
 
@@ -374,9 +423,10 @@ graph LR
 | **GPU Nodes** (Dell R750xa or similar) | 2 nodes | $80-120K | $160-240K |
 | **NVIDIA L40s GPUs** | 8 total (4 per node) | $10K | $80K |
 | **Compute Nodes** (Dell R650 or similar) | 3 nodes | $15-25K | $45-75K |
-| **Shared Storage** (3TB usable) | 1 system | $30-50K | $30-50K |
+| **Block/File Storage** (Dell PowerStore 3TB) | 1 system | $40-60K | $40-60K |
+| **Object Storage (S3)** (Dell ECS 2TB, optional) | 1 system | $20-30K | $20-30K |
 | **Network Switches** (25G capable) | 2 switches | $20K | $40K |
-| **Total Hardware** | - | - | **$355-485K** |
+| **Total Hardware** | - | - | **$385-535K** |
 | **Red Hat Licenses** (annual) | - | - | $100-150K/year |
 
 ### Recommended Production Configuration
@@ -386,9 +436,10 @@ graph LR
 | **GPU Nodes** (Dell R750xa or similar) | 4 nodes | $80-120K | $320-480K |
 | **NVIDIA A100s GPUs** | 8 total (2 per node) | $15-20K | $120-160K |
 | **Compute Nodes** (Dell R650 or similar) | 6 nodes | $15-25K | $90-150K |
-| **Shared Storage** (5TB usable) | 1 system | $50-80K | $50-80K |
+| **Block/File Storage** (Dell PowerFlex 5TB) | 1 system | $70-100K | $70-100K |
+| **Object Storage (S3)** (Dell ECS 2TB) | 1 system | $25-35K | $25-35K |
 | **Network Switches** (100G capable) | 2 switches | $40K | $80K |
-| **Total Hardware** | - | - | **$660-950K** |
+| **Total Hardware** | - | - | **$705-1,005K** |
 | **Red Hat Licenses** (annual) | - | - | $150-200K/year |
 
 ---
