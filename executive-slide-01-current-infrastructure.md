@@ -393,7 +393,7 @@ graph LR
 
 ---
 
-## 💡 Bottom Line for Management
+## 💡 Platform Capabilities Summary
 
 ### What This Infrastructure Enables
 
