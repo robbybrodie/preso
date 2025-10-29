@@ -209,6 +209,236 @@ graph LR
 
 ---
 
+## 🖥️ Hardware Requirements Breakdown
+
+### Server Specifications Needed
+
+```mermaid
+graph TB
+    subgraph Servers[Required Server Types]
+        subgraph GPU[GPU Nodes - AI Inference]
+            G1[Specification per Node:<br/>━━━━━━━━━━━━━━━━<br/>• CPUs: 32-64 cores<br/>• System RAM: 256-512 GB<br/>• GPUs: 2-4x L40s or A100s<br/>• Storage: 500GB local NVMe<br/>• Network: 25-100 Gbps]
+        end
+        
+        subgraph Compute[Compute Nodes - Applications]
+            C1[Specification per Node:<br/>━━━━━━━━━━━━━━━━<br/>• CPUs: 16-32 cores<br/>• System RAM: 128-256 GB<br/>• Storage: 200GB local<br/>• Network: 10-25 Gbps]
+        end
+        
+        subgraph Storage[Storage Infrastructure]
+            S1[Shared Storage:<br/>━━━━━━━━━━━━━━━━<br/>• Capacity: 2-5 TB usable<br/>• Type: NFS/Ceph/NetApp<br/>• IOPS: 10,000+ recommended<br/>• Redundancy: RAID 6 or replicated]
+        end
+    end
+    
+    style GPU fill:#76b900,color:#000
+    style Compute fill:#0066cc,color:#fff
+    style Storage fill:#ff9900,color:#000
+```
+
+---
+
+### Detailed Resource Requirements
+
+| Resource Type | Minimum | Recommended | Purpose |
+|--------------|---------|-------------|---------|
+| **GPU Nodes** | 2 nodes | 3-4 nodes | Run AI models and inference |
+| **CPUs per GPU Node** | 32 cores | 64 cores | Handle inference preprocessing |
+| **RAM per GPU Node** | 256 GB | 512 GB | Large model loading and batching |
+| **GPUs per Node** | 2x L40s | 4x A100s | Parallel inference, HA |
+| **Compute Nodes** | 3 nodes | 5-6 nodes | UI, API, supporting services |
+| **CPUs per Compute Node** | 16 cores | 32 cores | Application workloads |
+| **RAM per Compute Node** | 128 GB | 256 GB | Agent services, APIs |
+| **Shared Storage** | 2 TB | 5 TB | Models, data, persistent volumes |
+| **Network Bandwidth** | 10 Gbps | 25-100 Gbps | GPU-to-GPU, storage access |
+
+---
+
+### Storage Breakdown - Where 2-5TB Goes
+
+```mermaid
+pie title Storage Allocation (Total: ~2.5 TB Recommended)
+    "AI Models" : 800
+    "Vector Database & Embeddings" : 300
+    "Cookbooks & Playbooks" : 200
+    "Application Data & Logs" : 200
+    "OpenShift Infrastructure" : 500
+    "Backup & Snapshots" : 500
+```
+
+**Detailed Storage Requirements:**
+
+| Storage Area | Size | Growth Rate | Purpose |
+|-------------|------|-------------|---------|
+| **AI Model Weights** | 500-800 GB | Low | LLM models (Llama 3 70B: ~140GB, 8B: ~16GB, embeddings, etc.) |
+| **Vector Database** | 100-300 GB | Medium | Knowledge base embeddings, increases with migrations |
+| **Persistent Volumes** | 200-500 GB | High | Chef cookbooks, Ansible playbooks, conversion artifacts |
+| **Application Storage** | 100-200 GB | Medium | x2a-ui/api containers, logs, temp files |
+| **OpenShift Infrastructure** | 300-500 GB | Low | Registry, etcd, system services |
+| **Backup/Snapshots** | 500 GB | Medium | Model backups, DB snapshots |
+| **Total Recommended** | **2-3 TB** | - | Production deployment |
+| **Total with Growth** | **5 TB** | - | 2-year projection |
+
+---
+
+### Model Storage Details
+
+**Common Models You'll Run:**
+
+| Model | Size on Disk | GPU Memory Required | Use Case |
+|-------|-------------|-------------------|----------|
+| **Llama 3 8B** | ~16 GB | 16 GB VRAM | Fast inference, lightweight tasks |
+| **Llama 3 70B** | ~140 GB | 70-80 GB VRAM | Complex reasoning, high quality |
+| **Mistral 7B** | ~14 GB | 14 GB VRAM | Code generation |
+| **Granite Code 20B** | ~40 GB | 40 GB VRAM | Enterprise code tasks |
+| **Embedding Models** | ~2-5 GB each | 4-8 GB VRAM | Vector DB, RAG |
+| **Fine-tuned Models** | +50-200 GB | Varies | Custom organization models |
+| **Total Storage** | **300-800 GB** | - | All models + versions |
+
+**Why Multiple Models:**
+- Different models for different tasks (speed vs quality)
+- A/B testing and model evaluation
+- Version control (keep previous versions)
+- Organization-specific fine-tuned variants
+
+---
+
+### Memory (RAM) Requirements - Why So Much?
+
+```mermaid
+graph TB
+    subgraph Node[GPU Node with 512GB RAM]
+        A[Operating System: 16GB]
+        B[OpenShift Services: 32GB]
+        C[Model Loading Buffer: 150GB<br/>━━━━━━━━━━━━━━━━<br/>Load 70B model into RAM<br/>before GPU transfer]
+        D[Inference Batching: 128GB<br/>━━━━━━━━━━━━━━━━<br/>Queue multiple requests<br/>Process in parallel]
+        E[Agent Services: 64GB<br/>━━━━━━━━━━━━━━━━<br/>Memory for agent<br/>orchestration]
+        F[Vector DB Cache: 64GB<br/>━━━━━━━━━━━━━━━━<br/>Fast embedding lookups]
+        G[System Reserve: 58GB]
+    end
+    
+    style C fill:#cc0000,color:#fff
+    style D fill:#92d400,color:#000
+```
+
+**Why Large Memory Matters:**
+
+| Scenario | With 256GB RAM | With 512GB RAM |
+|----------|----------------|----------------|
+| **Model Loading** | Load 70B model slowly from disk | Pre-load in RAM for instant switching |
+| **Concurrent Users** | 5-10 users | 50-100 users |
+| **Batch Size** | Process 4 requests | Process 16 requests |
+| **Response Time** | 3-5 seconds | 1-2 seconds |
+| **Throughput** | 100 req/hour | 500+ req/hour |
+
+---
+
+### Network Requirements
+
+**Why High-Speed Network Matters:**
+
+```mermaid
+graph LR
+    A[User Request] -->|1ms| B[Load Balancer]
+    B -->|1ms| C[x2a-API Pod]
+    C -->|5ms| D[Agent Pod]
+    D -->|10ms| E[GPU Node - Inference]
+    E -->|50ms| F[Storage - Load Model]
+    F -->|2000ms| G[Process Request]
+    G -->|10ms| D
+    D -->|5ms| C
+    C -->|1ms| User
+    
+    style F fill:#cc0000,color:#fff
+    style G fill:#92d400,color:#000
+```
+
+| Network Speed | Model Load Time | Impact |
+|--------------|----------------|---------|
+| **1 Gbps** | 20-30 seconds | ❌ Unacceptable delays |
+| **10 Gbps** | 3-5 seconds | ⚠️ Workable but slow |
+| **25 Gbps** | 1-2 seconds | ✅ Good performance |
+| **100 Gbps** | <1 second | ✅ Optimal for multi-GPU |
+
+**Critical Paths:**
+- Storage → GPU Node (model loading)
+- GPU Node → GPU Node (distributed inference)
+- Any Node → Storage (PVC access)
+
+---
+
+## 💰 Hardware Investment Summary
+
+### Minimum Production Configuration
+
+| Component | Quantity | Unit Cost (est.) | Total |
+|-----------|----------|-----------------|-------|
+| **GPU Nodes** (Dell R750xa or similar) | 2 nodes | $80-120K | $160-240K |
+| **NVIDIA L40s GPUs** | 8 total (4 per node) | $10K | $80K |
+| **Compute Nodes** (Dell R650 or similar) | 3 nodes | $15-25K | $45-75K |
+| **Shared Storage** (3TB usable) | 1 system | $30-50K | $30-50K |
+| **Network Switches** (25G capable) | 2 switches | $20K | $40K |
+| **Total Hardware** | - | - | **$355-485K** |
+| **Red Hat Licenses** (annual) | - | - | $100-150K/year |
+
+### Recommended Production Configuration
+
+| Component | Quantity | Unit Cost (est.) | Total |
+|-----------|----------|-----------------|-------|
+| **GPU Nodes** (Dell R750xa or similar) | 4 nodes | $80-120K | $320-480K |
+| **NVIDIA A100s GPUs** | 8 total (2 per node) | $15-20K | $120-160K |
+| **Compute Nodes** (Dell R650 or similar) | 6 nodes | $15-25K | $90-150K |
+| **Shared Storage** (5TB usable) | 1 system | $50-80K | $50-80K |
+| **Network Switches** (100G capable) | 2 switches | $40K | $80K |
+| **Total Hardware** | - | - | **$660-950K** |
+| **Red Hat Licenses** (annual) | - | - | $150-200K/year |
+
+**ROI Consideration:**
+- If you already have this infrastructure → **$0 additional cost**
+- Chef migration project saves 200+ engineering days/year
+- At $1,500/day loaded cost → **$300K+ annual savings**
+- Hardware pays for itself in **2-3 years** from Chef migration alone
+
+---
+
+## 🔧 What If You Don't Have This Yet?
+
+### Option 1: Phased Approach (Recommended)
+
+**Phase 1 - Pilot (Months 1-2):**
+- Use existing OpenShift compute nodes (no GPUs)
+- Rent cloud GPUs temporarily (AWS/Azure) for testing
+- **Investment:** $5-10K for 2-month pilot
+- **Goal:** Prove value with 10-20 cookbook conversions
+
+**Phase 2 - Production (Months 3-6):**
+- Purchase GPU nodes based on pilot results
+- Deploy on-premises infrastructure
+- **Investment:** $350-500K (minimum config)
+- **Goal:** Full-scale migration capability
+
+**Phase 3 - Scale (Months 7-12):**
+- Add capacity based on demand
+- Expand to other AI use cases
+- **Investment:** Additional $200-400K
+- **Goal:** Multi-application AI platform
+
+### Option 2: Cloud-Based Alternative
+
+**Use Cloud GPUs Instead:**
+
+| Provider | Instance Type | GPUs | Cost per Hour | Monthly (24/7) |
+|----------|--------------|------|---------------|----------------|
+| **AWS** | p4d.24xlarge | 8x A100 (40GB) | $32.77 | ~$23,600 |
+| **Azure** | Standard_ND96asr_v4 | 8x A100 (40GB) | $27.20 | ~$19,600 |
+| **GCP** | a2-megagpu-16g | 16x A100 (40GB) | $33.00 | ~$23,800 |
+
+**Break-even Analysis:**
+- On-premises: $500K upfront + $150K/year support = **$500K Year 1, $150K/year after**
+- Cloud: $0 upfront + $240K/year = **$240K/year recurring**
+- **Break-even:** ~2.5 years
+- **Consideration:** Cloud = data egress concerns, no physical control
+
+---
+
 ## 💡 Bottom Line for Management
 
 ### What This Infrastructure Enables
