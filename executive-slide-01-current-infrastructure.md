@@ -391,52 +391,6 @@ graph LR
 | **Total Hardware** | - | - | **$660-950K** |
 | **Red Hat Licenses** (annual) | - | - | $150-200K/year |
 
-**ROI Consideration:**
-- If you already have this infrastructure → **$0 additional cost**
-- Chef migration project saves 200+ engineering days/year
-- At $1,500/day loaded cost → **$300K+ annual savings**
-- Hardware pays for itself in **2-3 years** from Chef migration alone
-
----
-
-## 🔧 What If You Don't Have This Yet?
-
-### Option 1: Phased Approach (Recommended)
-
-**Phase 1 - Pilot (Months 1-2):**
-- Use existing OpenShift compute nodes (no GPUs)
-- Rent cloud GPUs temporarily (AWS/Azure) for testing
-- **Investment:** $5-10K for 2-month pilot
-- **Goal:** Prove value with 10-20 cookbook conversions
-
-**Phase 2 - Production (Months 3-6):**
-- Purchase GPU nodes based on pilot results
-- Deploy on-premises infrastructure
-- **Investment:** $350-500K (minimum config)
-- **Goal:** Full-scale migration capability
-
-**Phase 3 - Scale (Months 7-12):**
-- Add capacity based on demand
-- Expand to other AI use cases
-- **Investment:** Additional $200-400K
-- **Goal:** Multi-application AI platform
-
-### Option 2: Cloud-Based Alternative
-
-**Use Cloud GPUs Instead:**
-
-| Provider | Instance Type | GPUs | Cost per Hour | Monthly (24/7) |
-|----------|--------------|------|---------------|----------------|
-| **AWS** | p4d.24xlarge | 8x A100 (40GB) | $32.77 | ~$23,600 |
-| **Azure** | Standard_ND96asr_v4 | 8x A100 (40GB) | $27.20 | ~$19,600 |
-| **GCP** | a2-megagpu-16g | 16x A100 (40GB) | $33.00 | ~$23,800 |
-
-**Break-even Analysis:**
-- On-premises: $500K upfront + $150K/year support = **$500K Year 1, $150K/year after**
-- Cloud: $0 upfront + $240K/year = **$240K/year recurring**
-- **Break-even:** ~2.5 years
-- **Consideration:** Cloud = data egress concerns, no physical control
-
 ---
 
 ## 💡 Bottom Line for Management
